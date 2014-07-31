@@ -7,6 +7,9 @@ import com.swampbits.tataille.ControlId;
 import com.swampbits.tataille.ControlInfo;
 import com.swampbits.tataille.DisplayEngine;
 import com.swampbits.tataille.Rect;
+import com.swampbits.tataille.CheckBoxHandler;
+import com.swampbits.tataille.ListSelectionHandler;
+import com.swampbits.tataille.PushButtonHandler;
 
 /**
  *
@@ -89,6 +92,12 @@ public class TatailleTester {
       ci.text = "Delivery";
       ci.helpCaption = "check if this order is for delivery";
       m_de.createCheckBox(ci);
+      m_de.setCheckBoxHandler(m_cidCheckDelivery, new CheckBoxHandler() {
+         @Override
+         public void checkBoxToggled(boolean isChecked) {
+            System.out.println("delivery: " + (isChecked ? "yes" : "no"));
+         }
+      });
 
       x += CK_DELIVERY_WIDTH;
       x += 20;
@@ -99,6 +108,12 @@ public class TatailleTester {
       ci.text = "Rush";
       ci.helpCaption = "check if this is a rush order";
       m_de.createCheckBox(ci);
+      m_de.setCheckBoxHandler(m_cidCheckRush, new CheckBoxHandler() {
+         @Override
+         public void checkBoxToggled(boolean isChecked) {
+            System.out.println("rush order: " + (isChecked ? "yes" : "no"));
+         }
+      });
       
       x += CK_RUSH_WIDTH;
       x += 15;
@@ -121,6 +136,12 @@ public class TatailleTester {
       ci.valuesDelimiter = VALUES_DELIMITER;
       ci.helpCaption = "list of items available for order";
       m_de.createListBox(ci);
+      m_de.setListSelectionHandler(m_cidListBox, new ListSelectionHandler() {
+         @Override
+         public void listItemSelected(int selectionIndex, String selectedValue) {
+            System.out.println("list item: " + selectionIndex + ", '" + selectedValue + "'");
+         }
+      });
       
       x += LIST_WIDTH;
       x += 30;
@@ -144,6 +165,12 @@ public class TatailleTester {
       ci.text = "Add Item";
       //ci.isEnabled = false;
       m_de.createPushButton(ci);
+      m_de.setPushButtonHandler(m_cidAddButton, new PushButtonHandler() {
+         @Override
+         public void pushButtonClicked() {
+            System.out.println("add item clicked");
+         }
+      });
 
       x += LIST_WIDTH;
       x += 30;
@@ -152,8 +179,14 @@ public class TatailleTester {
       ci = new ControlInfo(m_cidRemoveButton);
       ci.rect = new Rect(x, y, BTN_REMOVE_WIDTH, BTN_REMOVE_HEIGHT);
       ci.text = "Remove Item";
-      ci.isEnabled = false;
+      //ci.isEnabled = false;
       m_de.createPushButton(ci);
+      m_de.setPushButtonHandler(m_cidRemoveButton, new PushButtonHandler() {
+         @Override
+         public void pushButtonClicked() {
+            System.out.println("remove item clicked");
+         }
+      });
       
       x += 150;
 
@@ -161,8 +194,14 @@ public class TatailleTester {
       ci = new ControlInfo(m_cidOrderButton);
       ci.rect = new Rect(x, y, BTN_ORDER_WIDTH, BTN_ORDER_HEIGHT);
       ci.text = "Place Order";
-      ci.isEnabled = false;
+      //ci.isEnabled = false;
       m_de.createPushButton(ci);
+      m_de.setPushButtonHandler(m_cidOrderButton, new PushButtonHandler() {
+         @Override
+         public void pushButtonClicked() {
+            System.out.println("place order clicked");
+         }
+      });
       
       m_de.run();
    }

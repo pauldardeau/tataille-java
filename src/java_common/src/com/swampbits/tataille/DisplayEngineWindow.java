@@ -44,4 +44,10 @@ public interface DisplayEngineWindow {
    public boolean createTextView(ControlInfo ci);
    public boolean createTree(ControlInfo ci);
     
+   public boolean setCheckBoxHandler(ControlId cid, CheckBoxHandler handler);
+   public boolean setListSelectionHandler(ControlId cid, ListSelectionHandler handler);
+   public boolean setPushButtonHandler(ControlId cid, PushButtonHandler handler);
+   public boolean setSliderHandler(ControlId cid, SliderHandler handler);
+   public boolean setTabViewHandler(ControlId cid, TabViewHandler handler);
+
 }

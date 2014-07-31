@@ -9,14 +9,26 @@ package com.swampbits.tataille;
  */
 public abstract class GUIDisplayEngineWidget implements DisplayEngineWidget {
    
-   private final ControlId m_cid;
+   private final ControlInfo m_controlInfo;
     
-   public GUIDisplayEngineWidget(ControlId cid) {
-      m_cid = cid;
+   public GUIDisplayEngineWidget(ControlInfo controlInfo) {
+      m_controlInfo = controlInfo;
+   }
+   
+   public ControlInfo getControlInfo() {
+      return m_controlInfo;
    }
     
    public ControlId getControlId() {
-      return m_cid;
+      return m_controlInfo.cid;
+   }
+   
+   public boolean isControlType(DisplayEngine.ControlType controlType) {
+      if (m_controlInfo != null) {
+         return m_controlInfo.controlType == controlType;
+      }
+      
+      return false;
    }
     
    @Override

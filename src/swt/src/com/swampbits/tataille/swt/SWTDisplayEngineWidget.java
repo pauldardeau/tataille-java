@@ -17,20 +17,15 @@ import com.swampbits.tataille.DisplayEngineWidget;
 public class SWTDisplayEngineWidget extends GUIDisplayEngineWidget implements DisplayEngineWidget {
    
    private final Control m_control;
-   private final ControlInfo m_ci;
-    
+
+   
    public SWTDisplayEngineWidget(Control control, ControlInfo ci) {
-      super(ci.cid);
+      super(ci);
       m_control = control;
-      m_ci = ci;
    }
     
    public Control getControl() {
       return m_control;
-   }
-    
-   public ControlInfo getControlInfo() {
-      return m_ci;
    }
     
    @Override

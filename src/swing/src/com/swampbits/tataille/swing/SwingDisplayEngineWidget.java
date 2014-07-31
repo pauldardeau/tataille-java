@@ -5,7 +5,7 @@ package com.swampbits.tataille.swing;
 
 import javax.swing.JComponent;
 
-import com.swampbits.tataille.ControlId;
+import com.swampbits.tataille.ControlInfo;
 import com.swampbits.tataille.Rect;
 import com.swampbits.tataille.GUIDisplayEngineWidget;
 import com.swampbits.tataille.DisplayEngineWidget;
@@ -18,8 +18,8 @@ public class SwingDisplayEngineWidget extends GUIDisplayEngineWidget implements 
 {
    private final JComponent m_swingComponent;
     
-   public SwingDisplayEngineWidget(JComponent component, ControlId cid) {
-      super(cid);
+   public SwingDisplayEngineWidget(JComponent component, ControlInfo controlInfo) {
+      super(controlInfo);
       m_swingComponent = component;
    }
     

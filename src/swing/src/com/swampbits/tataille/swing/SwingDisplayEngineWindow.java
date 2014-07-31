@@ -26,6 +26,10 @@ import javax.swing.JTextField;
 //import javax.swing.JTree;
 import javax.swing.JPasswordField;
 import javax.swing.BorderFactory;
+import javax.swing.ListSelectionModel;
+
+import javax.swing.event.*;
+import javax.swing.event.*;
 
 import com.swampbits.tataille.ControlId;
 import com.swampbits.tataille.ControlInfo;
@@ -34,6 +38,35 @@ import com.swampbits.tataille.DisplayEngineWindow;
 import com.swampbits.tataille.GUIDisplayEngineWindow;
 import com.swampbits.tataille.Rect;
 
+
+class CheckBoxListener implements ActionListener {
+   private final SwingDisplayEngineWindow m_deWindow;
+   
+   public CheckBoxListener(SwingDisplayEngineWindow deWindow) {
+      m_deWindow = deWindow;
+   }
+   @Override
+   public void actionPerformed(ActionEvent event) {
+      JCheckBox checkBox = (JCheckBox) event.getSource();
+      m_deWindow.checkBoxToggled(checkBox);
+   }
+}
+
+class ListBoxSelectionHandler implements ListSelectionListener {
+   private final SwingDisplayEngineWindow m_deWindow;
+   
+   public ListBoxSelectionHandler(SwingDisplayEngineWindow deWindow) {
+      m_deWindow = deWindow;
+   }
+   
+   @Override
+   public void valueChanged(ListSelectionEvent event) {
+      if (!event.getValueIsAdjusting()) {
+         ListSelectionModel listSelectionModel = (ListSelectionModel) event.getSource();
+         //m_deWindow.listBoxSelectionChanged(listSelectionModel);
+      }
+   }
+}
 
 class PushButtonListener implements ActionListener {
    private final SwingDisplayEngineWindow m_deWindow;
@@ -45,6 +78,36 @@ class PushButtonListener implements ActionListener {
    public void actionPerformed(ActionEvent event) {
       JButton button = (JButton) event.getSource();
       m_deWindow.pushButtonClicked(button);
+   }
+}
+
+class SliderListener implements ChangeListener {
+   private final SwingDisplayEngineWindow m_deWindow;
+   
+   public SliderListener(SwingDisplayEngineWindow deWindow) {
+      m_deWindow = deWindow;
+   }
+   
+   @Override
+   public void stateChanged(ChangeEvent changeEvent) {
+      JSlider slider = (JSlider) changeEvent.getSource();
+      if (!slider.getValueIsAdjusting()) {
+         m_deWindow.sliderValueChanged(slider);
+      }
+   }
+}
+
+class TabViewListener implements ChangeListener {
+   private final SwingDisplayEngineWindow m_deWindow;
+   
+   public TabViewListener(SwingDisplayEngineWindow deWindow) {
+      m_deWindow = deWindow;
+   }
+   
+   @Override
+   public void stateChanged(ChangeEvent changeEvent) {
+      JTabbedPane tabView = (JTabbedPane) changeEvent.getSource();
+      m_deWindow.tabViewSelectionChanged(tabView);
    }
 }
 
@@ -88,10 +151,45 @@ public class SwingDisplayEngineWindow extends GUIDisplayEngineWindow implements 
    }
     
    public void pushButtonClicked(JButton button) {
-      System.out.println("push button clicked");
       ControlId cid = m_mapComponentToCid.get(button);
       if (cid != null) {
+         dispatchPushButtonClicked(cid);
+      }
+   }
+   
+   public void checkBoxToggled(JCheckBox checkBox) {
+      ControlId cid = m_mapComponentToCid.get(checkBox);
+      if (cid != null) {
+         dispatchCheckBoxToggled(cid, checkBox.isSelected());
+      }
+   }
+   
+   public void listBoxSelectionChanged(JList listBox) {
+      ControlId cid = m_mapComponentToCid.get(listBox);
+      if (cid != null) {
+         final int selectionIndex = listBox.getSelectedIndex();
+         String selectedValue = "";
+         if (selectionIndex > -1) {
+            selectedValue = (String) listBox.getSelectedValue();
+         }
          
+         dispatchListItemSelected(cid, selectionIndex, selectedValue);
+      }
+   }
+   
+   public void sliderValueChanged(JSlider slider) {
+      ControlId cid = m_mapComponentToCid.get(slider);
+      if (cid != null) {
+         dispatchSliderValueChanged(cid, slider.getValue());
+      }
+   }
+   
+   public void tabViewSelectionChanged(JTabbedPane tabView) {
+      ControlId cid = m_mapComponentToCid.get(tabView);
+      if (cid != null) {
+         final int tabIndex = tabView.getSelectedIndex();
+         String tabValue = tabView.getTitleAt(tabIndex);
+         dispatchTabViewItemSelected(cid, tabIndex, tabValue);
       }
    }
     
@@ -156,7 +254,7 @@ public class SwingDisplayEngineWindow extends GUIDisplayEngineWindow implements 
    }
     
    public boolean initializeControl(JComponent component, ControlInfo ci) {
-      SwingDisplayEngineWidget w = new SwingDisplayEngineWidget(component, ci.cid);
+      SwingDisplayEngineWidget w = new SwingDisplayEngineWidget(component, ci);
       component.setBounds(ci.rect.x, ci.rect.y, ci.rect.width, ci.rect.height);
         
       if ((ci.helpCaption != null) && (ci.helpCaption.length() > 0)) {
@@ -282,8 +380,14 @@ public class SwingDisplayEngineWindow extends GUIDisplayEngineWindow implements 
          }
             
          JScrollPane scrollPane = new JScrollPane(list);
-            
-         //TODO: setup selection listener
+         
+         ListSelectionModel listSelectionModel = list.getSelectionModel();
+         if (listSelectionModel != null) {
+            listSelectionModel.addListSelectionListener(
+                            new ListBoxSelectionHandler(this));
+         } else {
+            System.out.println("warning: no ListSelectionModel for JList");
+         }
             
          return initializeControl(list, ci);
       }
@@ -301,6 +405,8 @@ public class SwingDisplayEngineWindow extends GUIDisplayEngineWindow implements 
          }
 
          JScrollPane scrollPane = new JScrollPane(table);
+         
+         //TODO: set up selection listener
             
          return initializeControl(table, ci);
       }
@@ -325,8 +431,7 @@ public class SwingDisplayEngineWindow extends GUIDisplayEngineWindow implements 
             }
          }
             
-         //TODO: set up change listener
-            
+         tabbedPane.addChangeListener(new TabViewListener(this));
          return initializeControl(tabbedPane, ci);
       }
         
@@ -362,9 +467,10 @@ public class SwingDisplayEngineWindow extends GUIDisplayEngineWindow implements 
    public boolean createSlider(ControlInfo ci) {
       if ((ci != null) && (m_swingFrame != null)) {
          JSlider slider = new JSlider(swingOrientationForControl(ci), 0, 100, 0);
+         slider.addChangeListener(new SliderListener(this));
          return initializeControl(slider, ci);
       }
-        
+      
       return false;
    }
     
@@ -383,7 +489,8 @@ public class SwingDisplayEngineWindow extends GUIDisplayEngineWindow implements 
          if (ci.isSelected) {
             checkBox.setSelected(true);
          }
-            
+         
+         checkBox.addActionListener(new CheckBoxListener(this));
          return initializeControl(checkBox, ci);
       }
         

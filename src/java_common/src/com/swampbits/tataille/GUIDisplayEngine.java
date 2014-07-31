@@ -431,4 +431,54 @@ public abstract class GUIDisplayEngine implements DisplayEngine {
       return false;
    }
     
+   @Override
+   public boolean setCheckBoxHandler(ControlId cid, CheckBoxHandler handler) {
+      GUIDisplayEngineWindow window = this.getWindowForControlId(cid);
+      if (window != null) {
+         return window.setCheckBoxHandler(cid, handler);
+      }
+        
+      return false;
+   }
+   
+   @Override
+   public boolean setListSelectionHandler(ControlId cid, ListSelectionHandler handler) {
+      GUIDisplayEngineWindow window = this.getWindowForControlId(cid);
+      if (window != null) {
+         return window.setListSelectionHandler(cid, handler);
+      }
+        
+      return false;
+   }
+   
+   @Override
+   public boolean setPushButtonHandler(ControlId cid, PushButtonHandler handler) {
+      GUIDisplayEngineWindow window = this.getWindowForControlId(cid);
+      if (window != null) {
+         return window.setPushButtonHandler(cid, handler);
+      }
+        
+      return false;
+   }
+   
+   @Override
+   public boolean setSliderHandler(ControlId cid, SliderHandler handler) {
+      GUIDisplayEngineWindow window = this.getWindowForControlId(cid);
+      if (window != null) {
+         return window.setSliderHandler(cid, handler);
+      }
+        
+      return false;
+   }
+   
+   @Override
+   public boolean setTabViewHandler(ControlId cid, TabViewHandler handler) {
+      GUIDisplayEngineWindow window = this.getWindowForControlId(cid);
+      if (window != null) {
+         return window.setTabViewHandler(cid, handler);
+      }
+        
+      return false;
+   }
+
 }

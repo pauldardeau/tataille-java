@@ -15,11 +15,22 @@ public abstract class GUIDisplayEngineWindow implements DisplayEngineWindow {
    private final int m_windowId;
    private final HashMap<ControlId, GUIDisplayEngineWidget> m_mapIdToControl;
    private final HashMap<String, ArrayList<ControlId>> m_mapGroups;
-    
+   private final HashMap<ControlId, CheckBoxHandler> m_mapCheckBoxHandlers;
+   private final HashMap<ControlId, ListSelectionHandler> m_mapListSelectionHandlers;
+   private final HashMap<ControlId, PushButtonHandler> m_mapPushButtonHandlers;
+   private final HashMap<ControlId, SliderHandler> m_mapSliderHandlers;
+   private final HashMap<ControlId, TabViewHandler> m_mapTabViewHandlers;
+
+   
    public GUIDisplayEngineWindow(int windowId) {
       m_windowId = windowId;
       m_mapIdToControl = new HashMap<>();
       m_mapGroups = new HashMap<>();
+      m_mapCheckBoxHandlers = new HashMap<>();
+      m_mapListSelectionHandlers = new HashMap<>();
+      m_mapPushButtonHandlers = new HashMap<>();
+      m_mapSliderHandlers = new HashMap<>();
+      m_mapTabViewHandlers = new HashMap<>();
    }
     
    public boolean registerControl(ControlId cid, GUIDisplayEngineWidget control) {
@@ -118,6 +129,137 @@ public abstract class GUIDisplayEngineWindow implements DisplayEngineWindow {
       }
       
       return false;
+   }
+   
+   @Override
+   public boolean setCheckBoxHandler(ControlId cid, CheckBoxHandler handler) {
+      GUIDisplayEngineWidget widget = m_mapIdToControl.get(cid);
+      if (widget != null) {
+         if (widget.isControlType(DisplayEngine.ControlType.CHECK_BOX)) {
+            m_mapCheckBoxHandlers.put(cid, handler);
+            return true;
+         } else {
+            // log something
+         }
+      } else {
+         // log something
+      }
+      
+      return false;
+   }
+   
+   @Override
+   public boolean setListSelectionHandler(ControlId cid, ListSelectionHandler handler) {
+      GUIDisplayEngineWidget widget = m_mapIdToControl.get(cid);
+      if (widget != null) {
+         if (widget.isControlType(DisplayEngine.ControlType.COMBO_BOX) ||
+             widget.isControlType(DisplayEngine.ControlType.LIST_BOX)) {
+            m_mapListSelectionHandlers.put(cid, handler);
+            return true;
+         } else {
+            // log something
+         }
+      } else {
+         // log something
+      }
+      
+      return false;
+   }
+   
+   @Override
+   public boolean setPushButtonHandler(ControlId cid, PushButtonHandler handler) {
+      GUIDisplayEngineWidget widget = m_mapIdToControl.get(cid);
+      if (widget != null) {
+         if (widget.isControlType(DisplayEngine.ControlType.PUSH_BUTTON)) {
+            m_mapPushButtonHandlers.put(cid, handler);
+            return true;
+         } else {
+            // log something
+         }
+      } else {
+         // log something
+      }
+      
+      return false;
+   }
+   
+   @Override
+   public boolean setSliderHandler(ControlId cid, SliderHandler handler) {
+      GUIDisplayEngineWidget widget = m_mapIdToControl.get(cid);
+      if (widget != null) {
+         if (widget.isControlType(DisplayEngine.ControlType.SLIDER)) {
+            m_mapSliderHandlers.put(cid, handler);
+            return true;
+         } else {
+            // log something
+         }
+      } else {
+         // log something
+      }
+      
+      return false;
+   }
+   
+   @Override
+   public boolean setTabViewHandler(ControlId cid, TabViewHandler handler) {
+      GUIDisplayEngineWidget widget = m_mapIdToControl.get(cid);
+      if (widget != null) {
+         if (widget.isControlType(DisplayEngine.ControlType.TAB_VIEW)) {
+            m_mapTabViewHandlers.put(cid, handler);
+            return true;
+         } else {
+            // log something
+         }
+      } else {
+         // log something
+      }
+      
+      return false;
+   }
+   
+   public void dispatchPushButtonClicked(ControlId cid) {
+      if (cid != null) {
+         PushButtonHandler handler = m_mapPushButtonHandlers.get(cid);
+         if (handler != null) {
+            handler.pushButtonClicked();
+         }
+      }
+   }
+   
+   public void dispatchCheckBoxToggled(ControlId cid, boolean isChecked) {
+      if (cid != null) {
+         CheckBoxHandler handler = m_mapCheckBoxHandlers.get(cid);
+         if (handler != null) {
+            handler.checkBoxToggled(isChecked);
+         }
+      }
+   }
+   
+   public void dispatchSliderValueChanged(ControlId cid, int selectedValue) {
+      if (cid != null) {
+         SliderHandler handler = m_mapSliderHandlers.get(cid);
+         if (handler != null) {
+            handler.valueSelected(selectedValue);
+         }
+      }
+   }
+   
+   public void dispatchTabViewItemSelected(ControlId cid, int tabIndex, String tabValue) {
+      if (cid != null) {
+         TabViewHandler handler = m_mapTabViewHandlers.get(cid);
+         if (handler != null) {
+            handler.tabSelected(tabIndex, tabValue);
+         }
+      }
+   }
+   
+   public void dispatchListItemSelected(ControlId cid, int selectionIndex, String selectedValue) {
+      if (cid != null) {
+         ListSelectionHandler handler = m_mapListSelectionHandlers.get(cid);
+         if (handler != null) {
+            handler.listItemSelected(selectionIndex, selectedValue);
+         }
+      }
    }
 
 }

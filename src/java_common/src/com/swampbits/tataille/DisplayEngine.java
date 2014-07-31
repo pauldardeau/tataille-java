@@ -84,4 +84,10 @@ public interface DisplayEngine {
    public boolean setControlSize(ControlId cid, int width, int height);
    public boolean setControlPos(ControlId cid, int x, int y);
    public boolean setControlRect(ControlId cid, Rect rect);
+
+   public boolean setCheckBoxHandler(ControlId cid, CheckBoxHandler handler);
+   public boolean setListSelectionHandler(ControlId cid, ListSelectionHandler handler);
+   public boolean setPushButtonHandler(ControlId cid, PushButtonHandler handler);
+   public boolean setSliderHandler(ControlId cid, SliderHandler handler);
+   public boolean setTabViewHandler(ControlId cid, TabViewHandler handler);
 }
