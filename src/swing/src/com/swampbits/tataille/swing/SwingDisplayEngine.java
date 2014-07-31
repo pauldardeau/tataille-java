@@ -15,19 +15,19 @@ import com.swampbits.tataille.*;
  */
 public class SwingDisplayEngine extends GUIDisplayEngine implements DisplayEngine
 {
-    private final HashMap<Integer, SwingDisplayEngineWindow> m_mapIdToWindows;
-    private final SwingDisplayEngineWindow m_mainWindow;
+   private final HashMap<Integer, SwingDisplayEngineWindow> m_mapIdToWindows;
+   private final SwingDisplayEngineWindow m_mainWindow;
 
-    public SwingDisplayEngine(int width, int height, String title) {
-        m_mapIdToWindows = new HashMap<>();
-        m_mainWindow = new SwingDisplayEngineWindow(this, ID_MAIN_WINDOW);
-        m_mainWindow.setWindowSize(width, height);
-        m_mainWindow.setWindowTitle(title);
-        this.registerWindow(ID_MAIN_WINDOW, m_mainWindow);
-    }
+   public SwingDisplayEngine(int width, int height, String title) {
+      m_mapIdToWindows = new HashMap<>();
+      m_mainWindow = new SwingDisplayEngineWindow(this, ID_MAIN_WINDOW);
+      m_mainWindow.setWindowSize(width, height);
+      m_mainWindow.setWindowTitle(title);
+      this.registerWindow(ID_MAIN_WINDOW, m_mainWindow);
+   }
     
-    @Override
-    public void run() {
+   @Override
+   public void run() {
 javax.swing.SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -50,37 +50,36 @@ javax.swing.SwingUtilities.invokeLater(new Runnable() {
                        */
             }
         });
-    }
+   }
     
-    @Override
-    public String getDisplayEngineName() {
-        return "SwingDisplayEngine";
-    }
+   @Override
+   public String getDisplayEngineName() {
+      return "SwingDisplayEngine";
+   }
     
-    @Override
-    public String getDisplayEngineTechnology() {
-        return "Java Swing";
-    }
+   @Override
+   public String getDisplayEngineTechnology() {
+      return "Java Swing";
+   }
     
-    @Override
-    public String getDisplayEngineVersion() {
-        return "0.1";
-    }
+   @Override
+   public String getDisplayEngineVersion() {
+      return "0.1";
+   }
     
-    @Override
-    public boolean createWindow(int windowId, Rect rect) {
-        //TODO: implement createWindow
-        return false;
-    }
+   @Override
+   public boolean createWindow(int windowId, Rect rect) {
+      //TODO: implement createWindow
+      return false;
+   }
     
-    public SwingDisplayEngineWindow swingWindowFromId(int windowId) {
-        GUIDisplayEngineWindow window = this.getWindowForId(windowId);
-        if (window != null) {
-            return (SwingDisplayEngineWindow) window;
-        }
+   public SwingDisplayEngineWindow swingWindowFromId(int windowId) {
+      GUIDisplayEngineWindow window = this.getWindowForId(windowId);
+      if (window != null) {
+         return (SwingDisplayEngineWindow) window;
+      }
         
-        return null;
-    }
-    
+      return null;
+   }    
 
 }
