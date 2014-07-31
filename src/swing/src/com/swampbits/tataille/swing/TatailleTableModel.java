@@ -3,12 +3,13 @@
 
 package com.swampbits.tataille.swing;
 
-import com.swampbits.tataille.DisplayEngine;
-import com.swampbits.tataille.GUIDisplayEngine;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.table.*;
 import javax.swing.event.TableModelListener;
+
+import com.swampbits.tataille.DisplayEngine;
+import com.swampbits.tataille.GUIDisplayEngine;
 
 /**
  *
@@ -16,7 +17,7 @@ import javax.swing.event.TableModelListener;
  */
 public class TatailleTableModel implements TableModel
 {
-   private final ArrayList<String> m_listColumnNames;
+   private final List<String> m_listColumnNames;
     
    public TatailleTableModel(String columnNames) {
       m_listColumnNames = GUIDisplayEngine.tokenize(columnNames, DisplayEngine.DEFAULT_VALUES_DELIMITER);

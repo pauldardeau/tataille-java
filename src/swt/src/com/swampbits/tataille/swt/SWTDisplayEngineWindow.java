@@ -3,8 +3,6 @@
 
 package com.swampbits.tataille.swt;
 
-import java.util.ArrayList;
-
 import org.eclipse.swt.*;
 import org.eclipse.swt.browser.*;
 import org.eclipse.swt.widgets.*;
@@ -240,7 +238,7 @@ public class SWTDisplayEngineWindow extends GUIDisplayEngineWindow
          Combo combo = new Combo(getParent(ci), SWT.DROP_DOWN);
 
          if (ci.haveValues()) {
-            ArrayList<String> listValues =
+            java.util.List<String> listValues =
                         ci.getValues(DisplayEngine.DEFAULT_VALUES_DELIMITER);
             final int numberValues = listValues.size();
                 
@@ -263,7 +261,7 @@ public class SWTDisplayEngineWindow extends GUIDisplayEngineWindow
          List list = new List(getParent(ci), SWT.SINGLE);
             
          if (ci.haveValues()) {
-            ArrayList<String> listValues =
+            java.util.List<String> listValues =
                         ci.getValues(DisplayEngine.DEFAULT_VALUES_DELIMITER);
             final int numberValues = listValues.size();
                 
@@ -286,7 +284,7 @@ public class SWTDisplayEngineWindow extends GUIDisplayEngineWindow
          Table table = new Table(getParent(ci), SWT.BORDER | SWT.FULL_SELECTION);
             
          if (ci.haveValues()) {
-            ArrayList<String> listValues =
+            java.util.List<String> listValues =
                         ci.getValues(DisplayEngine.DEFAULT_VALUES_DELIMITER);
             final int numberValues = listValues.size();
                 

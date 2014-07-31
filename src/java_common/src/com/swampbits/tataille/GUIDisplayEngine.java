@@ -5,6 +5,7 @@ package com.swampbits.tataille;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.StringTokenizer;
 
 /**
@@ -24,7 +25,7 @@ public abstract class GUIDisplayEngine implements DisplayEngine {
       return "java";
    }
     
-   public static ArrayList<String> tokenize(String text, String delimiter) {
+   public static List<String> tokenize(String text, String delimiter) {
       StringTokenizer st = new StringTokenizer(text, delimiter);
       ArrayList<String> listTokens = new ArrayList<>(st.countTokens());
         

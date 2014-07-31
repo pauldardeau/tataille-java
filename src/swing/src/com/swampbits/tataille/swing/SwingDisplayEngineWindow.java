@@ -3,7 +3,7 @@
 
 package com.swampbits.tataille.swing;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 
 import java.awt.event.*;
@@ -313,7 +313,7 @@ public class SwingDisplayEngineWindow extends GUIDisplayEngineWindow implements 
       if ((ci != null) && (m_swingFrame != null)) {
          JTabbedPane tabbedPane = new JTabbedPane();
          if (ci.haveValues()) {
-            ArrayList<String> tabNames = ci.getValues(DisplayEngine.DEFAULT_VALUES_DELIMITER);
+            List<String> tabNames = ci.getValues(DisplayEngine.DEFAULT_VALUES_DELIMITER);
             final int numberTabs = tabNames.size();
                 
             JPanel panel;
