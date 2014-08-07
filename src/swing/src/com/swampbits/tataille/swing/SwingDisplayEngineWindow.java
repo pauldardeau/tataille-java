@@ -29,7 +29,6 @@ import javax.swing.BorderFactory;
 import javax.swing.ListSelectionModel;
 
 import javax.swing.event.*;
-import javax.swing.event.*;
 
 import com.swampbits.tataille.ControlId;
 import com.swampbits.tataille.ControlInfo;
@@ -52,6 +51,19 @@ class CheckBoxListener implements ActionListener {
    }
 }
 
+class ComboBoxListener implements ActionListener {
+   private final SwingDisplayEngineWindow m_deWindow;
+   
+   public ComboBoxListener(SwingDisplayEngineWindow deWindow) {
+      m_deWindow = deWindow;
+   }
+   @Override
+   public void actionPerformed(ActionEvent event) {
+      JComboBox comboBox = (JComboBox) event.getSource();
+      m_deWindow.comboBoxSelectionChanged(comboBox);
+   }
+}
+
 class ListBoxSelectionHandler implements ListSelectionListener {
    private final SwingDisplayEngineWindow m_deWindow;
    
@@ -63,7 +75,27 @@ class ListBoxSelectionHandler implements ListSelectionListener {
    public void valueChanged(ListSelectionEvent event) {
       if (!event.getValueIsAdjusting()) {
          ListSelectionModel listSelectionModel = (ListSelectionModel) event.getSource();
-         //m_deWindow.listBoxSelectionChanged(listSelectionModel);
+         if (listSelectionModel != null) {
+            m_deWindow.listBoxSelectionChanged(listSelectionModel);
+         }
+      }
+   }
+}
+
+class ListViewSelectionListener implements ListSelectionListener {
+   private final SwingDisplayEngineWindow m_deWindow;
+   
+   public ListViewSelectionListener(SwingDisplayEngineWindow deWindow) {
+      m_deWindow = deWindow;
+   }
+   
+   @Override
+   public void valueChanged(ListSelectionEvent event) {
+      if (!event.getValueIsAdjusting()) {
+         ListSelectionModel listSelectionModel = (ListSelectionModel) event.getSource();
+         if (listSelectionModel != null) {
+            m_deWindow.listViewSelectionChanged(listSelectionModel);
+         }
       }
    }
 }
@@ -164,9 +196,25 @@ public class SwingDisplayEngineWindow extends GUIDisplayEngineWindow implements 
       }
    }
    
-   public void listBoxSelectionChanged(JList listBox) {
+   public void comboBoxSelectionChanged(JComboBox comboBox) {
+      ControlId cid = m_mapComponentToCid.get(comboBox);
+      if (cid != null) {
+         String selectedValue = "";
+         final int selectionIndex = comboBox.getSelectedIndex();
+         if (selectionIndex > -1) {
+            selectedValue = (String) comboBox.getItemAt(selectionIndex);
+         }
+         
+         dispatchListItemSelected(cid, selectionIndex, selectedValue);
+      }
+   }
+   
+   public void listBoxSelectionChanged(ListSelectionModel listSelectionModel) {
+      System.out.println("listbox selection changed");
+      /*
       ControlId cid = m_mapComponentToCid.get(listBox);
       if (cid != null) {
+         JList listBox = null;
          final int selectionIndex = listBox.getSelectedIndex();
          String selectedValue = "";
          if (selectionIndex > -1) {
@@ -175,6 +223,12 @@ public class SwingDisplayEngineWindow extends GUIDisplayEngineWindow implements 
          
          dispatchListItemSelected(cid, selectionIndex, selectedValue);
       }
+      */
+   }
+   
+   public void listViewSelectionChanged(ListSelectionModel listSelectionModel) {
+      System.out.println("listview selection changed");
+      //TODO: implement listViewSelectionChanged
    }
    
    public void sliderValueChanged(JSlider slider) {
@@ -359,9 +413,8 @@ public class SwingDisplayEngineWindow extends GUIDisplayEngineWindow implements 
          } else {
             comboBox = new JComboBox();
          }
-            
-         //TODO: setup selection listener
-            
+
+         comboBox.addActionListener(new ComboBoxListener(this));
          return initializeControl(comboBox, ci);
       }
         
@@ -398,15 +451,27 @@ public class SwingDisplayEngineWindow extends GUIDisplayEngineWindow implements 
    @Override
    public boolean createListView(ControlInfo ci) {
       if ((ci != null) && (m_swingFrame != null)) {
+         
+         String[] columnTitles = { "A", "B", "C", "D" };
+    Object[][] rowData = { { "11", "12", "13", "14" }, { "21", "22", "23", "24" },
+        { "31", "32", "33", "34" }, { "41", "42", "44", "44" } };
+
+         JTable table = new JTable(rowData, columnTitles);
+         
+         /*
          JTable table = new JTable();
             
          if (ci.haveValues()) {
             table.setModel(new TatailleTableModel(ci.values));
          }
+         */
 
          JScrollPane scrollPane = new JScrollPane(table);
+         table.setFillsViewportHeight(true);
          
-         //TODO: set up selection listener
+         ListSelectionModel selectionModel = table.getSelectionModel();
+         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+         selectionModel.addListSelectionListener(new ListViewSelectionListener(this));
             
          return initializeControl(table, ci);
       }
